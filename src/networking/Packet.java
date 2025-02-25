@@ -13,7 +13,8 @@ public abstract class Packet {
         LOGIN(00),
         DISCONNECT(01),
         BALLPOSITION(02),
-        PLAYERPOSITION(03);
+        PLAYERPOSITION(03),
+        SCOREBOARD(04);
 
         private int packetId;
         private PacketTypes(int packetId)

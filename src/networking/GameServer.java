@@ -2,6 +2,7 @@ package networking;
 
 import com.nsprod.engine.core.Handler;
 import com.nsprod.engine.helpers.ID;
+import main.Ball;
 import main.PLayer;
 
 import java.io.IOException;
@@ -88,7 +89,15 @@ public class GameServer extends Thread
                 int playerWidth = 15, playerHeight = 75;
                 clientPlayer = new PLayer(ID.Player, false);
                 clientPlayer.setSize(playerWidth, playerHeight);
+
+                int ballWidth = 15, ballHeight = 15;
+
+                Ball ball = new Ball(ID.Object, true);
+                ball.setSize(ballWidth, ballHeight);
+
                 Handler.addGameObject(clientPlayer);
+                Handler.addGameObject(ball);
+
                 break;
             case PLAYERPOSITION:
                 packet = new PacketPlayerPos(data);

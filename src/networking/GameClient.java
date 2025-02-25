@@ -1,6 +1,7 @@
 package networking;
 
 import main.Ball;
+import main.GamePong;
 import main.PLayer;
 
 import java.io.IOException;
@@ -78,6 +79,11 @@ public class GameClient extends Thread
             case PLAYERPOSITION:
                 packet = new PacketPlayerPos(data);
                 hostPlayer.setPosition(((PacketPlayerPos) packet).getPosX(), ((PacketPlayerPos) packet).getPosY());
+                break;
+            case SCOREBOARD:
+                packet = new PacketScoreboard(data);
+                GamePong.clientScore = Integer.valueOf (((PacketScoreboard) packet).getClientScore());
+                GamePong.hostScore = Integer.valueOf (((PacketScoreboard) packet).getHostScore());
                 break;
         }
     }

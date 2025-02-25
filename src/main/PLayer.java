@@ -52,7 +52,7 @@ public class PLayer extends GameObject {
 
     @Override
     public void render(Graphics g) {
-        g.setColor(Color.WHITE);
+        g.setColor(Color.RED);
         g.fillRect(x, y, width, height);
     }
 

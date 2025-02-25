@@ -6,6 +6,7 @@ import com.nsprod.engine.helpers.ID;
 import networking.ConnectedClient;
 import networking.GameServer;
 import networking.PacketBallPos;
+import networking.PacketScoreboard;
 
 import java.awt.*;
 import java.util.Random;
@@ -19,15 +20,23 @@ public class Ball extends GameObject {
 
         if(isHost)
         {
-            init();
+            initPos();
+            initVel();
         }
     }
 
-    private void init()
+    public void initPos()
+    {
+        x = GamePong.WIDTH/2;
+        y = GamePong.HEIGHT/2;
+    }
+
+    private void initVel()
     {
         Random random = new Random();
-        int speedX = random.nextInt(2, 4);
-        int speedY = random.nextInt(-3, 3);
+
+        int speedX = random.nextInt(2) < 1 ? random.nextInt(-3, -1) :  random.nextInt(1, 3);
+        int speedY = random.nextInt(2) < 1 ? random.nextInt(-3, -1) :  random.nextInt(1, 3);
 
         velX = -speedX;
         velY = speedY;
@@ -43,10 +52,27 @@ public class Ball extends GameObject {
             {
                 PLayer player = (PLayer)go;
                 boolean vConst = y > player.getY() && y < player.getY() + player.getHeight();
-                boolean hConst = player.isSelf() ? x <= player.getX() + player.getWidth() : x >= player.getX();
+                boolean hConst = player.isSelf() ? x <= player.getX() + player.getWidth() : x >= player.getX() - width;
 
-                if(vConst && hConst)
-                    velX *= -1;
+                if(vConst && hConst) {
+                    velX *= -2;
+                }
+                else if(hConst && !vConst)
+                {
+                    initPos();
+                    initVel();
+                    if(player.isSelf())
+                        GamePong.clientScore += 1;
+                    else
+                        GamePong.hostScore += 1;
+
+                    GameServer gameServer = GamePong.gameServer;
+                    if(gameServer != null && gameServer.getConnectedClients().size() > 0)
+                    {
+                        ConnectedClient client = gameServer.getConnectedClients().get(0);
+                        GamePong.gameServer.sendData(new PacketScoreboard(GamePong.hostScore + "-" + GamePong.clientScore).getData(),client.ip() , client.port());
+                    }
+                }
             }
         }
     }
@@ -73,8 +99,7 @@ public class Ball extends GameObject {
         {
             ConnectedClient client = gameServer.getConnectedClients().get(0);
             GamePong.gameServer.sendData(new PacketBallPos(x, y).getData(),client.ip() , client.port());
-            System.out.println("X sent: " + x);
-            System.out.println("Y sent: " + y);
+
         }
     }
 
@@ -93,7 +118,7 @@ public class Ball extends GameObject {
 
     @Override
     public void render(Graphics g) {
-        g.setColor(Color.WHITE);
+        g.setColor(Color.ORANGE);
         g.fillOval(x, y, width, height);
     }
 }

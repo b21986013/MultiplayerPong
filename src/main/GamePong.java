@@ -14,6 +14,8 @@ public class GamePong extends Game {
     public static int WIDTH, HEIGHT;
     public static GameServer gameServer;
     public static GameClient gameClient;
+    public static int hostScore = 0;
+    public static int clientScore = 0;
 
     public GamePong(int w, int h, String title) {
         super(w, h, title);
@@ -44,16 +46,9 @@ public class GamePong extends Game {
         self.setSize(playerWidth,playerHeight);
         self.setPosition(playerStartPosX, playerStartPosY);
 
-        int ballWidth = 15, ballHeight = 15;
-        int ballStartPosX = WIDTH/2, ballStartPosY = HEIGHT/2;
 
-        Ball ball = new Ball(ID.Object, true);
-
-        ball.setSize(ballWidth, ballHeight);
-        ball.setPosition(ballStartPosX, ballStartPosY);
 
         Handler.addGameObject(self);
-        Handler.addGameObject(ball);
 
         this.addKeyListener(keyInput);
 
@@ -76,7 +71,7 @@ public class GamePong extends Game {
             KeyInput keyInput = new KeyInput();
 
             int playerWidth = 15, playerHeight = 75;
-            int playerStartPosX = WIDTH - 50, playerStartPosY = HEIGHT/2-playerHeight/2;
+            int playerStartPosX = WIDTH - 50 - playerWidth * 2, playerStartPosY = HEIGHT/2-playerHeight/2;
 
             PLayer self = new PLayer(ID.Player, true);
             self.setPosition(playerStartPosX, playerStartPosY);
@@ -116,6 +111,16 @@ public class GamePong extends Game {
     public void draw(Graphics g) {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        g.setColor(Color.WHITE);
+        for(int i = 0; i < 30; i++)
+        {
+            g.fillRect(WIDTH/2 - 3, i * 20, 6, 10);
+        }
+
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 40));
+        g.drawString(String.valueOf(hostScore), WIDTH/2-40, 30);
+        g.drawString(String.valueOf(clientScore), WIDTH/2+20, 30);
 
         Handler.render(g);
     }
