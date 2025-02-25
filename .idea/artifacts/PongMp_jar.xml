@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="PongMp:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PongMp_jar</output-path>
+    <root id="archive" name="PongMp.jar">
+      <element id="module-output" name="MultiplayerPong" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/2DGameEngine.jar" path-in-jar="/" />
+      <element id="library" level="project" name="2DGameEngine" />
+    </root>
+  </artifact>
+</component>

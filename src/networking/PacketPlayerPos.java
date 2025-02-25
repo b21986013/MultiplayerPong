@@ -1,0 +1,41 @@
+package networking;
+
+public class PacketPlayerPos extends Packet{
+    private byte[] data;
+    private int posX, posY;
+
+    // Use this for parsing incoming packets.
+    public PacketPlayerPos(byte[] data)
+    {
+        super(03);
+        String pos = readMessage(data);
+        posX = Integer.valueOf(pos.substring(0,3));
+        posY = Integer.valueOf(pos.substring(3,6));
+    }
+
+    // Use this for sending packets.
+    public PacketPlayerPos(int posX, int posY)
+    {
+        super(03);
+        this.posX = posX;
+        this.posY = posY;
+    }
+
+    // Use this for sending packets.
+    @Override
+    public byte[] getData()
+    {
+        String posXStr = posX >= 100 ? String.valueOf(posX) : posX < 100 && posX >= 10 ? "0" + posX : posX < 10 && posX >= 0 ? "00" + posX : "000";
+        String posYStr = posY >= 100 ? String.valueOf(posY) : posY < 100 && posY >= 10 ? "0" + posY : posY < 10 && posY >= 0 ? "00" + posY : "000";
+        data = ("03" + posXStr + posYStr).getBytes();
+        return data;
+    }
+
+    public int getPosX(){
+        return posX;
+    }
+
+    public int getPosY(){
+        return  posY;
+    }
+}
