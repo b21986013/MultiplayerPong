@@ -41,7 +41,7 @@ public class GamePong extends Game {
         int playerWidth = 15, playerHeight = 75;
         int playerStartPosX = 50, playerStartPosY = HEIGHT/2-playerHeight/2;
 
-        PLayer self = new PLayer(ID.Player, true);
+        PLayer self = new PLayer("Player", true);
         self.setKeyInput(keyInput);
         self.setSize(playerWidth,playerHeight);
         self.setPosition(playerStartPosX, playerStartPosY);
@@ -73,17 +73,17 @@ public class GamePong extends Game {
             int playerWidth = 15, playerHeight = 75;
             int playerStartPosX = WIDTH - 50 - playerWidth * 2, playerStartPosY = HEIGHT/2-playerHeight/2;
 
-            PLayer self = new PLayer(ID.Player, true);
+            PLayer self = new PLayer("Player", true);
             self.setPosition(playerStartPosX, playerStartPosY);
             self.setSize(playerWidth, playerHeight);
             self.setKeyInput(keyInput);
 
-            PLayer hostPlayer = new PLayer(ID.Player, false);
+            PLayer hostPlayer = new PLayer("Player", false);
             hostPlayer.setSize(playerWidth, playerHeight);
 
             int ballWidth = 15, ballHeight = 15;
 
-            Ball ball = new Ball(ID.Object, false);
+            Ball ball = new Ball("Ball", false);
             ball.setSize(ballWidth, ballHeight);
 
             gameClient = new GameClient(ipField.getText(), ball, hostPlayer);

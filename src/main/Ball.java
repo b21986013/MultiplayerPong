@@ -2,7 +2,6 @@ package main;
 
 import com.nsprod.engine.core.GameObject;
 import com.nsprod.engine.core.Handler;
-import com.nsprod.engine.helpers.ID;
 import networking.ConnectedClient;
 import networking.GameServer;
 import networking.PacketBallPos;
@@ -13,7 +12,7 @@ import java.util.Random;
 
 public class Ball extends GameObject {
     private final boolean isHost;
-    public Ball(ID id, boolean isHost) {
+    public Ball(String id, boolean isHost) {
         super(id);
 
         this.isHost = isHost;
@@ -44,34 +43,33 @@ public class Ball extends GameObject {
 
     private void horizontalCollision()
     {
-//        if (x >= GamePong.WIDTH || x <= 0)
-//            velX *= -1;
         for(GameObject go : Handler.getGameObjects())
         {
-            if(go.getID() == ID.Player)
+            if(go.getID().equals("Player"))
             {
                 PLayer player = (PLayer)go;
-                boolean vConst = y > player.getY() && y < player.getY() + player.getHeight();
+                boolean vConst = y >= player.getY()-height/2 && y <= player.getY() + player.getHeight() + height/2;
                 boolean hConst = player.isSelf() ? x <= player.getX() + player.getWidth() : x >= player.getX() - width;
 
                 if(vConst && hConst) {
-                    velX *= -2;
+                    if(player.getPrevY() < player.getY() && velY < 0 || player.getPrevY() > player.getY() && velY > 0){
+                        velX *= -1.3;
+                        velY *= 1.5;
+                    } else if (player.getPrevY() < player.getY() && velY > 0 || player.getPrevY() > player.getY() && velY < 0) {
+                        velX *= -1.3;
+                        velY *= 1.1;
+                    }
+                    else{
+                        velX *= -1;
+                    }
+
                 }
                 else if(hConst && !vConst)
                 {
+                    updateScore(player);
+                    sendScore();
                     initPos();
                     initVel();
-                    if(player.isSelf())
-                        GamePong.clientScore += 1;
-                    else
-                        GamePong.hostScore += 1;
-
-                    GameServer gameServer = GamePong.gameServer;
-                    if(gameServer != null && gameServer.getConnectedClients().size() > 0)
-                    {
-                        ConnectedClient client = gameServer.getConnectedClients().get(0);
-                        GamePong.gameServer.sendData(new PacketScoreboard(GamePong.hostScore + "-" + GamePong.clientScore).getData(),client.ip() , client.port());
-                    }
                 }
             }
         }
@@ -80,7 +78,6 @@ public class Ball extends GameObject {
     private void verticalCollision(){
         if(y <= 0 || y >= (GamePong.HEIGHT - 3 * height))
         {
-            System.out.println("height: " + height);
             velY *= -1;
         }
     }
@@ -103,6 +100,22 @@ public class Ball extends GameObject {
         }
     }
 
+    private void updateScore(PLayer pLayer){
+        if(pLayer.isSelf())
+            GamePong.clientScore += 1;
+        else
+            GamePong.hostScore += 1;
+    }
+
+    private void sendScore(){
+        GameServer gameServer = GamePong.gameServer;
+        if(gameServer != null && gameServer.getConnectedClients().size() > 0)
+        {
+            ConnectedClient client = gameServer.getConnectedClients().get(0);
+            GamePong.gameServer.sendData(new PacketScoreboard(GamePong.hostScore + "-" + GamePong.clientScore).getData(),client.ip() , client.port());
+        }
+    }
+
     @Override
     public void tick() {
         // if the instance is a host do the stuff otherwise just get the positions and render.
@@ -119,6 +132,6 @@ public class Ball extends GameObject {
     @Override
     public void render(Graphics g) {
         g.setColor(Color.ORANGE);
-        g.fillOval(x, y, width, height);
+        g.fillOval((int)x, (int)y, width, height);
     }
 }

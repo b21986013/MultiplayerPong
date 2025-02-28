@@ -1,7 +1,6 @@
 package main;
 
 import com.nsprod.engine.core.GameObject;
-import com.nsprod.engine.helpers.ID;
 import networking.*;
 
 import java.awt.*;
@@ -11,7 +10,11 @@ public class PLayer extends GameObject {
     private KeyInput keyInput;
     private int speed = 5;
 
-    public PLayer(ID id, boolean isSelf) {
+
+
+    private float prevY;
+
+    public PLayer(String id, boolean isSelf) {
         super(id);
 
         this.isSelf = isSelf;
@@ -24,6 +27,7 @@ public class PLayer extends GameObject {
 
         if(isSelf)
         {
+            prevY = y;
             y += velY;
             if(keyInput != null){
                 if(keyInput.isDown())
@@ -39,13 +43,13 @@ public class PLayer extends GameObject {
                 GameServer gameServer = GamePong.gameServer;
                 if(gameServer.getConnectedClients().size() > 0) {
                     ConnectedClient client = gameServer.getConnectedClients().get(0);
-                    gameServer.sendData(new PacketPlayerPos(x, y).getData(), client.ip(), client.port());
+                    gameServer.sendData(new PacketPlayerPos((int)x, (int)y).getData(), client.ip(), client.port());
                 }
             }
             else if (GamePong.gameClient != null)
             {
                 GameClient gameClient = GamePong.gameClient;
-                gameClient.sendData(new PacketPlayerPos(x, y).getData());
+                gameClient.sendData(new PacketPlayerPos((int)x, (int)y).getData());
             }
         }
     }
@@ -53,7 +57,7 @@ public class PLayer extends GameObject {
     @Override
     public void render(Graphics g) {
         g.setColor(Color.RED);
-        g.fillRect(x, y, width, height);
+        g.fillRect((int)x, (int)y, width, height);
     }
 
     public void setKeyInput(KeyInput keyInput)
@@ -61,11 +65,11 @@ public class PLayer extends GameObject {
         this.keyInput = keyInput;
     }
 
-    public int getX(){
+    public float getX(){
         return x;
     }
 
-    public int getY(){
+    public float getY(){
         return y;
     }
 
@@ -79,6 +83,10 @@ public class PLayer extends GameObject {
 
     public boolean isSelf(){
         return isSelf;
+    }
+
+    public float getPrevY() {
+        return prevY;
     }
 
 }

@@ -2,7 +2,7 @@ package networking;
 
 public class PacketPlayerPos extends Packet{
     private byte[] data;
-    private int posX, posY;
+    private float posX, posY;
 
     // Use this for parsing incoming packets.
     public PacketPlayerPos(byte[] data)
@@ -14,7 +14,7 @@ public class PacketPlayerPos extends Packet{
     }
 
     // Use this for sending packets.
-    public PacketPlayerPos(int posX, int posY)
+    public PacketPlayerPos(float posX, float posY)
     {
         super(03);
         this.posX = posX;
@@ -25,17 +25,17 @@ public class PacketPlayerPos extends Packet{
     @Override
     public byte[] getData()
     {
-        String posXStr = posX >= 100 ? String.valueOf(posX) : posX < 100 && posX >= 10 ? "0" + posX : posX < 10 && posX >= 0 ? "00" + posX : "000";
-        String posYStr = posY >= 100 ? String.valueOf(posY) : posY < 100 && posY >= 10 ? "0" + posY : posY < 10 && posY >= 0 ? "00" + posY : "000";
+        String posXStr = (int)posX >= 100 ? String.valueOf((int)posX) : (int)posX < 100 &&(int) posX >= 10 ? "0" + (int)posX : (int)posX < 10 && (int)posX >= 0 ? "00" + (int)posX : "000";
+        String posYStr = (int)posY >= 100 ? String.valueOf((int)posY) : (int)posY < 100 &&(int) posY >= 10 ? "0" + (int)posY : (int)posY < 10 && (int)posY >= 0 ? "00" + (int)posY : "000";
         data = ("03" + posXStr + posYStr).getBytes();
         return data;
     }
 
-    public int getPosX(){
+    public float getPosX(){
         return posX;
     }
 
-    public int getPosY(){
+    public float getPosY(){
         return  posY;
     }
 }

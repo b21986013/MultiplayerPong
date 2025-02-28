@@ -87,12 +87,12 @@ public class GameServer extends Thread
 
                 connectedClients.add(new ConnectedClient(ipAddress, port));
                 int playerWidth = 15, playerHeight = 75;
-                clientPlayer = new PLayer(ID.Player, false);
+                clientPlayer = new PLayer("Player", false);
                 clientPlayer.setSize(playerWidth, playerHeight);
 
                 int ballWidth = 15, ballHeight = 15;
 
-                Ball ball = new Ball(ID.Object, true);
+                Ball ball = new Ball("Ball", true);
                 ball.setSize(ballWidth, ballHeight);
 
                 Handler.addGameObject(clientPlayer);
@@ -101,7 +101,7 @@ public class GameServer extends Thread
                 break;
             case PLAYERPOSITION:
                 packet = new PacketPlayerPos(data);
-                clientPlayer.setPosition(((PacketPlayerPos) packet).getPosX(), ((PacketPlayerPos) packet).getPosY());
+                clientPlayer.setPosition((int)((PacketPlayerPos) packet).getPosX(), (int)((PacketPlayerPos) packet).getPosY());
                 break;
         }
     }

@@ -78,7 +78,7 @@ public class GameClient extends Thread
                 break;
             case PLAYERPOSITION:
                 packet = new PacketPlayerPos(data);
-                hostPlayer.setPosition(((PacketPlayerPos) packet).getPosX(), ((PacketPlayerPos) packet).getPosY());
+                hostPlayer.setPosition((int)((PacketPlayerPos) packet).getPosX(), (int)((PacketPlayerPos) packet).getPosY());
                 break;
             case SCOREBOARD:
                 packet = new PacketScoreboard(data);
